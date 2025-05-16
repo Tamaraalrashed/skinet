@@ -1,1 +1,13 @@
-<h1 class="text-3xl underline bg-sky-50">Hello World</h1>
+
+<app-header></app-header>
+<div>
+  <ul>
+    @for (product of products;track product.id){
+   <li>
+     {{product.name}}
+   </li>
+    }
+  </ul>
+
+
+</div>

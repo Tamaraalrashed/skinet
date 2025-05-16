@@ -1,1 +1,12 @@
+@use '@angular/material' as mat;
 @import "tailwindcss";
+
+$customTheme: mat.define-theme();
+
+.custom-theme {
+  @include mat.all-component-themes($customTheme);
+  //override button styles here
+  .mdc-button, .mdc-button-stroked, .mdc-button-raised {
+  @apply rounded-md;
+  }
+}
