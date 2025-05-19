@@ -1,4 +1,5 @@
 {
+  "important": "true",
   "plugins": {
     "@tailwindcss/postcss": {}
   }
