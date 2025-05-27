@@ -4,11 +4,13 @@ using System.Text;
 using API.MiddleWare;
 using Core.Interfaces;
 using Infrastructure.Data;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Identity.Client.AppConfig;
 using Microsoft.IdentityModel.Tokens;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,7 +25,14 @@ builder.Services.AddDbContext<StoreContext>(opt=>
 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddCors();
-
+builder.Services.AddSingleton<IConnectionMultiplexer>(config =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("Redis")??
+    throw new NullReferenceException("Redis connection string is null");
+    var configuration = ConfigurationOptions.Parse(connectionString, true);
+    return ConnectionMultiplexer.Connect(configuration);
+});
+builder.Services.AddSingleton<ICartService, CartService>();
 //builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(
     //op =>
    // {
@@ -32,7 +41,7 @@ builder.Services.AddCors();
 //op.Cookie.Name = "myAppCookie";
        // op.Cookie.Expiration = TimeSpan.FromDays(15);
  //   });
- builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
+ /*builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
      options=>options.TokenValidationParameters = new TokenValidationParameters
      {
          ValidateIssuer = true,
@@ -41,7 +50,7 @@ builder.Services.AddCors();
          ValidIssuer = "YOUR_ISSUER",
          ValidAudience = "YOUR_AUDIENCE",
          IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
-     });
+     });*/
      
 var app = builder.Build();
 app.UseMiddleware<ExceptionMiddleware>();
