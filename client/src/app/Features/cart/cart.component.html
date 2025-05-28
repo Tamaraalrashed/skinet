@@ -1,0 +1,15 @@
+<section>
+  <div class="mx-auto max-w-screen-xl p-4">
+    <div class="flex gap-6 items-start  w-full ">
+      <div class="w-full">
+        @for(item of cartService.cart()?.items;track item.productId){
+          <app-cart-item [item]="item"></app-cart-item>
+        }
+      </div>
+      <div class="w-1/4">
+        <app-order-summary></app-order-summary>
+      </div>
+    </div>
+
+  </div>
+</section>

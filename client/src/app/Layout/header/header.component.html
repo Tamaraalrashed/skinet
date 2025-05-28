@@ -7,7 +7,7 @@
       <a routerLink="/contact">Contact</a>
     </nav>
     <div class="flex gap-3">
-      <a matBadge="5" matBadgeSize="large" class="custom-badge mt-2 mr-2 " routerLink="/login">
+      <a activerouterLink="active" class="custom-badge mt-2 mr-2 " matBadge="{{cartService.itemCount()}}" matBadgeSize="large" routerLink="/cart">
         <mat-icon>shopping_cart</mat-icon>
        </a>
       <button mat-stroked-button>Login</button>
@@ -15,6 +15,7 @@
     </div>
   </div>
 </header>
+
 @if(busyService.loading){
   <mat-progress-bar mode="indeterminate" class="fixed top-20 z-50"></mat-progress-bar>
 }
