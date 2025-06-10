@@ -2,10 +2,12 @@
 using System.Security.Cryptography;
 using System.Text;
 using API.MiddleWare;
+using Core.Entities;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Identity.Client.AppConfig;
@@ -33,6 +35,8 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(config =>
     return ConnectionMultiplexer.Connect(configuration);
 });
 builder.Services.AddSingleton<ICartService, CartService>();
+builder.Services.AddAuthorization();
+builder.Services.AddIdentityApiEndpoints<AppUser>().AddEntityFrameworkStores<StoreContext>();
 //builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(
     //op =>
    // {
@@ -54,11 +58,12 @@ builder.Services.AddSingleton<ICartService, CartService>();
      
 var app = builder.Build();
 app.UseMiddleware<ExceptionMiddleware>();
-app.UseCors(x=>x.AllowAnyHeader().AllowAnyMethod().
+app.UseCors(x=>x.AllowAnyHeader().AllowAnyMethod().AllowCredentials().
     WithOrigins("http://localhost:4200", "https://localhost:4200"));
 //app.UseHttpsRedirection();
 // Configure the HTTP request pipeline.
 app.MapControllers();
+app.MapGroup("api").MapIdentityApi<AppUser>();
 try
 {
     using var scope= app.Services.CreateScope();
