@@ -34,10 +34,10 @@ public class AccountController(SignInManager<AppUser> signInManager):BaseApiCont
         };
         return Ok();
     }
-
+[Authorize]
     [HttpPost]
     [Route("logout")]
-    public async Task<ActionResult> Logout()
+        public async Task<ActionResult> Logout()
     {
         await signInManager.SignOutAsync();
         return NoContent();
@@ -61,6 +61,7 @@ public class AccountController(SignInManager<AppUser> signInManager):BaseApiCont
     }
     
     [HttpGet]
+    [Route("auth-status")]
     public  ActionResult GetAuthState()
     {
            return Ok(new {IsAuthenticated = User.Identity?.IsAuthenticated??false});

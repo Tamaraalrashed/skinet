@@ -1,0 +1,19 @@
+import {Component} from '@angular/core';
+import {MatButton} from '@angular/material/button';
+import {RouterLink} from '@angular/router';
+import {MatIcon} from '@angular/material/icon';
+
+@Component({
+  selector: 'app-empty-state',
+  imports: [
+    MatIcon,
+    MatButton,
+    RouterLink
+  ],
+  templateUrl: './empty-state.component.html',
+  styleUrl: './empty-state.component.scss'
+})
+export class EmptyStateComponent {
+
+
+}
