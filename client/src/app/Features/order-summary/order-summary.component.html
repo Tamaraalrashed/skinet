@@ -1,40 +1,42 @@
 <div class="mx-auto max-w-4xl flex-1 space-y-6 w-full">
   <div class="space-y-4 rounded border-gray-200 shadow-sm bg-white p-4">
     <p class="text-xl font-semibold">Order Summary</p>
-    <div class="space-y-4 " >
+    <div class="space-y-4 ">
       <div class="space-y-2">
-        <dl class="flex items-center justify-between gap-4" >
+        <dl class="flex items-center justify-between gap-4">
           <dt class="font-medium! text-gray-500">SubTotal</dt>
           <dd class="font-medium! text-gray-900">{{ cartService.totals()?.subTotal }}</dd>
         </dl>
-        <dl class="flex items-center justify-between gap-4" >
+        <dl class="flex items-center justify-between gap-4">
           <dt class="font-medium! text-gray-500">Discount</dt>
           <dd class="font-medium! text-green-500">{{ cartService.totals()?.discount }}</dd>
         </dl>
-           <dl class="flex items-center justify-between gap-4" >
+        <dl class="flex items-center justify-between gap-4">
           <dt class="font-medium! text-gray-500">Delivery fee</dt>
           <dd class="font-medium! text-gray-900">{{ cartService.totals()?.shipping }}</dd>
         </dl>
 
       </div>
-      <dl class="flex items-center justify-between gap-4 border-t border-gray-200 pt-2" >
+      <dl class="flex items-center justify-between gap-4 border-t border-gray-200 pt-2">
         <dt class="font-medium! text-gray-500">Total</dt>
         <dd class="font-medium! text-gray-900">{{ cartService.totals()?.total }}</dd>
       </dl>
     </div>
-    <div class="flex flex-col gap-2">
-      <button mat-flat-button routerLink="/checkout" class="w-full" >Checkout</button>
-      <button mat-button routerLink="/shop" class="w-full" >Continue Shopping</button>
-    </div>
+    @if (location.path() !== '/checkout') {
+      <div class="flex flex-col gap-2">
+        <button mat-flat-button routerLink="/checkout" class="w-full">Checkout</button>
+        <button mat-button routerLink="/shop" class="w-full">Continue Shopping</button>
+      </div>
+    }
   </div>
   <div class="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-  <form class="space-y-2 flex flex-col p-2">
-<label  class="mb-2 block text-sm font-medium!" for="coupon">Do you have a voucher Code </label>
-  <mat-form-field appearance="outline" class="w-full">
-  <mat-label> Voucher Code </mat-label>
-    <input matInput type="text" name="coupon" id="coupon">
-  </mat-form-field>
-    <button mat-flat-button  >Apply</button>
-  </form>
+    <form class="space-y-2 flex flex-col p-2">
+      <label class="mb-2 block text-sm font-medium!" for="coupon">Do you have a voucher Code </label>
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label> Voucher Code</mat-label>
+        <input matInput type="text" name="coupon" id="coupon">
+      </mat-form-field>
+      <button mat-flat-button>Apply</button>
+    </form>
   </div>
 </div>

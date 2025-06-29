@@ -10,6 +10,8 @@ public class BaseSpecification<T>(Expression<Func<T, bool>>? criteria) : ISpecif
     public Expression<Func<T, bool>>? Criteria => criteria;
     public Expression<Func<T, object>>? OrderBy { get; private set; }
     public Expression<Func<T, object>>? OrderByDescending { get; private set; }
+    public List<Expression<Func<T, object>>> Includes { get; } = [];
+    public List<string> IncludeStrings { get; } = [];
     public bool IsDistinct { get; private set; }
     public int Take { get; private set; }
     public int Skip { get; private set; }
@@ -23,13 +25,21 @@ public class BaseSpecification<T>(Expression<Func<T, bool>>? criteria) : ISpecif
         return query;
     }
 
+    protected void SetIncludes(Expression<Func<T, object>> includesExp)
+    {
+        Includes.Add(includesExp);
+    }  
+    protected void SetIncludes(string includesStr)
+    {
+        IncludeStrings.Add(includesStr);
+    } 
     protected void SetOrderBy(Expression<Func<T, object>> orderBy)
     {
         OrderBy = orderBy;
     } 
-    protected void SetOrderByDesc(Expression<Func<T, object>> orderByDescending)
+    protected void SetOrderByDesc(Expression<Func<T, object>> orderByDesc)
     {
-        orderByDescending = orderByDescending;
+        OrderByDescending = orderByDesc;
     }
 
     protected void SetIsDistinct()
@@ -42,6 +52,30 @@ public class BaseSpecification<T>(Expression<Func<T, bool>>? criteria) : ISpecif
         Take = take;
         IsPaginationEnabled = true;
     }
+    
+    protected void ApplyOrderByFromString(string orderBy)
+    {
+        var parts = orderBy.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length == 0) return;
+
+        string propertyName = parts[0];
+        string direction = parts.Length > 1 ? parts[1].ToLower() : "asc";
+
+        var parameter = Expression.Parameter(typeof(T), "x");
+        
+        var property = Expression.PropertyOrField(parameter, propertyName);
+
+        // Convert to object
+        var converted = Expression.Convert(property, typeof(object));
+        var lambda = Expression.Lambda<Func<T, object>>(converted, parameter);
+
+        if (direction == "desc")
+            SetOrderByDesc(lambda);
+        else
+            SetOrderBy(lambda);
+    }
+
 }
 
 public class BaseSpecification<T, TResult>(Expression<Func<T,bool>> criteira) : BaseSpecification<T>(criteira),

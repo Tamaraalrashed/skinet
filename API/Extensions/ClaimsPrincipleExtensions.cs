@@ -27,7 +27,7 @@ public static class ClaimsPrincipleExtensions
         return user;
     }
 
-    private static string GetEmail(this ClaimsPrincipal principal)
+    public static string GetEmail(this ClaimsPrincipal principal)
     {
         return principal.FindFirstValue(ClaimTypes.Email)??
                throw new AuthenticationException("No email claim");
